@@ -34,12 +34,4 @@ class Comment extends Model
     public function getWhoWhatAttribute() {
         return "user {$this->user_id} rate {$this->rating}";
     }
-
-    public function setRatingAttribute($value) {
-        $this->attributes['rating'] = $value + 1;
-    }
-
-    protected $cast = [
-        'rating' => 'float',
-    ];
 }

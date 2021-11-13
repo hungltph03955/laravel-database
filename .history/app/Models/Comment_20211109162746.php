@@ -14,9 +14,9 @@ class Comment extends Model
 
     protected static function booted()
     {
-        // static::retrieved(function($comment) {
-        //     echo $comment->rating;
-        // });
+        static::retrieved(function($comment) {
+            echo $comment->rating;
+        });
         static::addGlobalScope('rating', function(Builder $builder) {
             $builder->where('rating', '>', 2);
         });
@@ -31,15 +31,4 @@ class Comment extends Model
         return $value + 10;
     }
 
-    public function getWhoWhatAttribute() {
-        return "user {$this->user_id} rate {$this->rating}";
-    }
-
-    public function setRatingAttribute($value) {
-        $this->attributes['rating'] = $value + 1;
-    }
-
-    protected $cast = [
-        'rating' => 'float',
-    ];
 }

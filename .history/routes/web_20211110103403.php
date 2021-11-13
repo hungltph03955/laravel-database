@@ -406,10 +406,11 @@ Route::get('/', function () {
     $result47->rating = 4;
     $result47->save();
 
+
     $result48 = User::select([
         'users.*',
         'last_commented_at' => Comment::selectRaw('MAX(created_at)')->whereColumn('user_id', 'users.id')
-    ])->withCasts(['last_commented_at' => 'datetime:Y-m-d'])->limit(10)->get()->toJson();
+    ])->withCasts(['last_commented_at' => 'datetime:Y-m-d'])->limit(10)->get();
     dump($result48);
 
 

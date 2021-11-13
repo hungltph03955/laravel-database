@@ -395,23 +395,17 @@ Route::get('/', function () {
     // $result45 = Comment::where('rating', 2)->forceDelete();
     // $result45 = Comment::where('rating', 2)->delete();
     // dump($result45);
-
+s
 
     $result46 = Comment::find(1);
-    // dump($result46);
-    // dump($result46->rating);
-    // dump($result46->who_what);
+    dump($result46);
+    dump($result46->rating);
+    dump($result46->who_what);
 
-    $result47 = Comment::find(1);
-    $result47->rating = 4;
-    $result47->save();
 
-    $result48 = User::select([
-        'users.*',
-        'last_commented_at' => Comment::selectRaw('MAX(created_at)')->whereColumn('user_id', 'users.id')
-    ])->withCasts(['last_commented_at' => 'datetime:Y-m-d'])->limit(10)->get()->toJson();
-    dump($result48);
 
 
     return view('welcome');
+
+
 });

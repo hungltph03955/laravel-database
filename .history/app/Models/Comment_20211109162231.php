@@ -17,9 +17,9 @@ class Comment extends Model
         // static::retrieved(function($comment) {
         //     echo $comment->rating;
         // });
-        static::addGlobalScope('rating', function(Builder $builder) {
-            $builder->where('rating', '>', 2);
-        });
+        // static::addGlobalScope('rating', function(Builder $builder) {
+        //     $builder->where('rating', '>', 2);
+        // });
     }
 
 
@@ -27,19 +27,4 @@ class Comment extends Model
         return $query->where('rating', '>', $value);
     }
 
-    public function getRatingAttribute($value) {
-        return $value + 10;
-    }
-
-    public function getWhoWhatAttribute() {
-        return "user {$this->user_id} rate {$this->rating}";
-    }
-
-    public function setRatingAttribute($value) {
-        $this->attributes['rating'] = $value + 1;
-    }
-
-    protected $cast = [
-        'rating' => 'float',
-    ];
 }

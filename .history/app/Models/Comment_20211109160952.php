@@ -5,10 +5,12 @@ namespace App\Models;
 use Illuminate\Database\Eloquent\Builder;
 use Illuminate\Database\Eloquent\Factories\HasFactory;
 use Illuminate\Database\Eloquent\Model;
+use Illuminate\Database\Eloquent\SoftDeletes;
 
 class Comment extends Model
 {
     use HasFactory;
+    use SoftDeletes;
 
     protected $guarded = [];
 
@@ -27,19 +29,4 @@ class Comment extends Model
         return $query->where('rating', '>', $value);
     }
 
-    public function getRatingAttribute($value) {
-        return $value + 10;
-    }
-
-    public function getWhoWhatAttribute() {
-        return "user {$this->user_id} rate {$this->rating}";
-    }
-
-    public function setRatingAttribute($value) {
-        $this->attributes['rating'] = $value + 1;
-    }
-
-    protected $cast = [
-        'rating' => 'float',
-    ];
 }

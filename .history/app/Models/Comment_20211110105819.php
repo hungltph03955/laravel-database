@@ -40,6 +40,6 @@ class Comment extends Model
     }
 
     protected $cast = [
-        'rating' => 'float',
+
     ];
 }

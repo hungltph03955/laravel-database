@@ -36,10 +36,6 @@ class Comment extends Model
     }
 
     public function setRatingAttribute($value) {
-        $this->attributes['rating'] = $value + 1;
+        $this->attributes['rating'] = $value + 1l
     }
-
-    protected $cast = [
-        'rating' => 'float',
-    ];
 }

@@ -39,7 +39,5 @@ class Comment extends Model
         $this->attributes['rating'] = $value + 1;
     }
 
-    protected $cast = [
-        'rating' => 'float',
-    ];
+    protected $ca
 }

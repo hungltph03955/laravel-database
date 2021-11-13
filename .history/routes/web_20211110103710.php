@@ -412,6 +412,5 @@ Route::get('/', function () {
     ])->withCasts(['last_commented_at' => 'datetime:Y-m-d'])->limit(10)->get()->toJson();
     dump($result48);
 
-
     return view('welcome');
 });
