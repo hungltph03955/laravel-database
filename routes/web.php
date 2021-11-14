@@ -1,5 +1,6 @@
 <?php
 
+use App\Models\Address;
 use App\Models\Room;
 use App\Models\User;
 use App\Models\Comment;
@@ -410,7 +411,25 @@ Route::get('/', function () {
         'users.*',
         'last_commented_at' => Comment::selectRaw('MAX(created_at)')->whereColumn('user_id', 'users.id')
     ])->withCasts(['last_commented_at' => 'datetime:Y-m-d'])->limit(10)->get()->toJson();
-    dump($result48);
+    // dump($result48);
+
+    $result49 = User::find(1);
+    // dump($result49);
+    // dump($result49->address);
+    // dump($result49->address->street);
+
+    $result50 = Address::find(1);
+    // dump($result50);
+    // dump($result50->user);
+
+    $result51 = User::find(465);
+    // dump($result51);
+    // dump($result51->comments);
+
+    $result52 = Comment::find(2318);
+    dump($result52);
+    dump($result52->user);
+
 
 
     return view('welcome');

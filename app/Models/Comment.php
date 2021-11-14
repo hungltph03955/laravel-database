@@ -42,4 +42,8 @@ class Comment extends Model
     protected $cast = [
         'rating' => 'float',
     ];
+
+    public function user() {
+        return $this->belongsTo('App\Models\User', 'user_id', 'id');
+    }
 }
