@@ -4,11 +4,16 @@ use App\Models\Address;
 use App\Models\Room;
 use App\Models\User;
 use App\Models\Comment;
+use App\Models\City;
+use App\Models\Company;
+use App\Models\Image;
 use App\Models\Reservation;
 use Illuminate\Support\Facades\DB;
 use Illuminate\Support\Facades\Route;
 use PhpParser\Node\Stmt\TryCatch;
 use SebastianBergmann\Environment\Console;
+use App\Http\Resources\UserResource;
+use App\Http\Resources\UsersCollection;
 
 /*
 |--------------------------------------------------------------------------
@@ -404,8 +409,8 @@ Route::get('/', function () {
     // dump($result46->who_what);
 
     $result47 = Comment::find(1);
-    $result47->rating = 4;
-    $result47->save();
+    // $result47->rating = 4;
+    // $result47->save();
 
     $result48 = User::select([
         'users.*',
@@ -427,10 +432,231 @@ Route::get('/', function () {
     // dump($result51->comments);
 
     $result52 = Comment::find(2318);
-    dump($result52);
-    dump($result52->user);
+    // dump($result52);
+    // dump($result52->user);
+
+    $result53 = City::find(1);
+    // dump($result53);
+    // dump($result53->rooms);
+
+    $result54 = Room::where('room_size', 4)->get();
+    // dump($result54);
+    // foreach($result54 as $room) {
+    //     foreach($room->cities as $city) {
+    //         // echo $city->name .'<br>';
+    //         // echo $city->pivot->room_id . '<br>';
+    //         dump($city);
+    //         dump($city->pivot);
+    //         dump($city->pivot->created_at);
+    //     }
+    // }
+
+    $result55 = Comment::find(1);
+    // dump($result55->country->name);
+
+    $result56 = Company::find(2);
+    // dump($result56);
+    // dump($result56->reservations);
+
+    $result56 = User::find(3);
+    // dump($result56);
+    // dump($result56->image);
+
+    $result57 = Image::find(3);
+    // dump($result57);
+    // dump($result57->imageable);
+
+    $result58 = Room::find(10);
+
+    // dump($result58);
+    // dump($result58->comments);
+
+    $result59 = User::find(1);
+    // dump($result59->likedImages);
+    // dump($result59->likedRooms);
+
+    $result60 = Room::find(4);
+    // dump($result60);
+    // dump($result60->likes);
+
+    $result61 = User::find(1)->comments()->where('rating', '>', 3)->orWhere('rating', '<', 4)->get();
+    // dump($result61);
+
+    $result62 = User::find(1)->comments()->where(function($query) {
+        return $query->where('rating', '>', 3)->orWhere('rating', '<', 4);
+    })->get();
+    // dump($result62);
+
+    $result63 = User::has('comments', '>=', 6)->get();
+    // dump($result63);
+
+    $result64 = User::whereHas('comments', function($query) {
+        $query->where('rating', '>', 2);
+    }, '>=', 2)->get();
+    // dump($result64);
+
+    $result65 = User::doesntHave('comments')->limit(5)->get();
+    // dump($result65);
+
+    $result66 = User::whereDoesntHave('comments', function($query) {
+        $query->where('rating', '<', 2);
+    })->limit(10)->get();
+    // dump($result66);
+
+    $result67 = Reservation::whereDoesntHave('user.comments', function($query) {
+        $query->where('rating', '<', 2);
+    })->limit(10)->get();
+    // dump($result67);
+
+    $result68 = User::withCount('comments')->limit(10)->get();
+    // dump($result68);
+
+    $result69 = User::withCount([
+        'comments',
+        'comments as negative_comments_count' => function ($query) {
+            $query->where('rating', '>', '2');
+        }
+    ])->limit(10)->get();
+    // dump($result69);
+
+    $result70 = Comment::whereHasMorph('commentable', ['App\Models\Image', 'App\Models\Room'], function ($query, $type) {
+        if ($type === 'App\Models\Room') {
+            $query->where('room_size', '>', 2);
+            $query->orWhere('room_size', '<', 2);
+        }
+
+        if ($type === 'App\Models\Image') {
+            $query->where('path', 'like', '%lorem%');
+        }
+
+    })->limit(10)->get();
+    // dump($result70);
 
 
+    $result71 = Comment::with(['commentable' => function ($morphTo) {
+        $morphTo->morphWithCount([
+            Room::class => ['comments'],
+            Image::class => ['comments'],
+        ]);
+    }])->find(3);
+    // dump($result71);
+
+    $result72 = Comment::find(3)->loadMorphCount('commentable', [
+        Room::class => ['comments'],
+        Image::class => ['comments'],
+    ]);
+    // dump($result72);
+
+    $user = User::find(1);
+    // $result73 = $user->address()->delete();
+    // $result74 = $user->address()->saveMany([
+    //     new Address([
+    //         'number' => 1,
+    //         'street' => 'street',
+    //         'country' => 'USA'
+    //         ])
+    // ]);
+
+    $user = User::find(2);
+    $adress = Address::find(2);
+    // $adress->user()->associate($user);
+    // $result73 = $adress->save();
+    // dump($result73);
+
+    // $adress->user()->dissociate();
+    // $result74 = $adress->save();
+    // dump($result74);
+
+    $result75 = User::find(4);
+    // dump($result75->address);
+
+    $room = Room::find(1);
+    // $result76 = $room->cities()->attach(1);
+    // dump($result76);
+
+    // $result77 = $room->cities()->detach([1]);
+    // dump($result77);
+
+    // $comment = Comment::find(1);
+    // $comment->conten = "Edit to this comment";
+    // $result78 = $comment->save();
+    // dump($result78);
+
+    // $city = City::find(1);
+    // $result79 = $city->rooms()->attach(1);
+    // dump($result79);
+
+
+    // $result80 = User::limit(50)->get();
+    // foreach ($result80 as $user) {
+        // echo "{$user->address->street} <br>";
+    // }
+    // dump($result80);
+
+
+    // $result81 = User::with(['address' => function ($query) {
+    //     $query->where('street', 'like', '%loaf%');
+    // }])->limit(50)->get();
+    // dump($result81);
+
+
+    // foreach ($result81 as $user) {
+        // echo "$user->address";
+        // echo "{$user->address->street} <br>";
+    // }
+
+    $result82 = Reservation::with("user.address")->limit(10)->get();
+    // foreach ($result82 as $reservation) {
+    //     echo "{$reservation->user->address->street} <br>";
+    // }
+    // dump($result82);
+
+    $result83 = User::limit(10)->get();
+    $result83->load('address');
+    // dump($result83);
+
+    $result84 = Image::with(['imageable' => function ($morphTo) {
+        $morphTo->morphWith([
+            User::class => ['likedImages']
+        ]);
+
+    }])->limit(10)->get();
+    // dump($result84);
+
+    $result85 = Image::with('imageable')->get();
+    $result85->loadMorph('imageable', [User::class => ['likedImages']]);
+    // dump($result85);
+
+    $result86 = User::with('comments')->limit(10)->get();
+    // dump($result86);
+    $result87 = DB::table('users')->join('comments', 'users.id', '=', 'comments.user_id')->limit(10)->get();
+    // dump($result87);
+
+    $result87 = User::with('comments')->limit(10)->get()->makeVisible('passqord')->toArray();
+    // dump($result87);
+
+    $result88 = new UserResource(User::limit(10)->get());
+    // return $result88;
+    // return $result88;
+    // dump($result88);
+
+    // $result89 = UserResource::collection(User::limit(10)->get());
+    // return $result89;
+
+    $result90 = new UsersCollection(User::limit(10)->get());
+    // return $result90;
+
+    $result91 = User::with('address', 'comments')->paginate(2);
+    // return $result91;
+
+    $result92 = new UsersCollection(User::with('address', 'comments')->limit(10)->get());
+    // return $result92;
+
+    $result93 = new UsersCollection(User::with('address', 'comments')->limit(10)->get());
+    // return $result93;
+
+    $result94 = new UsersCollection(User::with('address', 'comments')->paginate(1));
+    return $result94;
 
     return view('welcome');
 });

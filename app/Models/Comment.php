@@ -17,9 +17,9 @@ class Comment extends Model
         // static::retrieved(function($comment) {
         //     echo $comment->rating;
         // });
-        static::addGlobalScope('rating', function(Builder $builder) {
-            $builder->where('rating', '>', 2);
-        });
+        // static::addGlobalScope('rating', function(Builder $builder) {
+        //     $builder->where('rating', '>', 2);
+        // });
     }
 
 
@@ -46,4 +46,13 @@ class Comment extends Model
     public function user() {
         return $this->belongsTo('App\Models\User', 'user_id', 'id');
     }
+
+    public function country() {
+        return $this->hasOneThrough('App\Models\Address', 'App\Models\User', 'id', 'user_id', 'user_id', 'id')->select('country as name');
+    }
+
+    public function commentable() {
+        return $this->morphTo();
+    }
+
 }

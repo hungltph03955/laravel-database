@@ -5,12 +5,12 @@ namespace App\Models;
 use Illuminate\Database\Eloquent\Factories\HasFactory;
 use Illuminate\Database\Eloquent\Model;
 
-class Room extends Model
+class Image extends Model
 {
     use HasFactory;
 
-    public function cities() {
-        return $this->belongsToMany('App\Models\City')->withPivot('created_at', 'updated_at')->using('App\Models\CityRoom');
+    public function imageable() {
+        return $this->morphTo();
     }
 
     public function comments() {

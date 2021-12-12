@@ -12,6 +12,8 @@ class User extends Authenticatable
 {
     use HasApiTokens, HasFactory, Notifiable;
 
+    protected $wiith = ['address'];
+
     /**
      * The attributes that are mass assignable.
      *
@@ -31,6 +33,8 @@ class User extends Authenticatable
     protected $hidden = [
         'password',
         'remember_token',
+        // 'comments'
+        'email',
     ];
 
     /**
@@ -45,10 +49,24 @@ class User extends Authenticatable
 
     public function address() {
         return $this->hasOne('App\Models\Address', 'user_id', 'id');
+        // ->withDefault([
+        //     'country' => 'no addrees attached yet'
+        // ])
     }
 
     public function comments() {
         return $this->hasMany('App\Models\Comment', 'user_id', 'id');
     }
 
+    public function image() {
+        return $this->morphOne('App\Models\Image', 'imageable');
+    }
+
+    public function likedImages() {
+        return $this->morphedByMany('App\Models\Image', 'likeable');
+    }
+
+    public function likedRooms() {
+        return $this->morphedByMany('App\Models\Room', 'likeable');
+    }
 }

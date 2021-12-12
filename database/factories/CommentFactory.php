@@ -25,7 +25,9 @@ class CommentFactory extends Factory
         return [
             'content' => $this->faker->text(500),
             'user_id' => $this->faker->numberBetween(1, 5000),
-            'rating' => $this->faker->numberBetween(1, 5)
+            'rating' => $this->faker->numberBetween(1, 5),
+            'commentable_type' => $this->faker->randomElement(['App\Models\Room', 'App\Models\Image']),
+            'commentable_id' => $this->faker->numberBetween(1,600)
         ];
     }
 }

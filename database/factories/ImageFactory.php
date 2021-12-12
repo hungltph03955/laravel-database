@@ -2,17 +2,17 @@
 
 namespace Database\Factories;
 
-use App\Models\Address;
+use App\Models\Image;
 use Illuminate\Database\Eloquent\Factories\Factory;
 
-class AddressFactory extends Factory
+class ImageFactory extends Factory
 {
     /**
      * The name of the factory's corresponding model.
      *
      * @var string
      */
-    protected $model = Address::class;
+    protected $model = Image::class;
 
     /**
      * Define the model's default state.
@@ -22,10 +22,9 @@ class AddressFactory extends Factory
     public function definition()
     {
         return [
-            'number' => $this->faker->numberBetween(1, 5000),
-            'street' => $this->faker->streetName(),
-            'country' => $this->faker->country,
-            // 'user_id' => $this->faker->numberBetween(1, 5000)
+            'path' => $this->faker->imageUrl(),
+            'imageable_id' => $this->faker->numberBetween(1,300),
+            'imageable_type' => $this->faker->randomElement(['App\Models\User', 'App\Models\City']),
         ];
     }
 }
